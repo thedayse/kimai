@@ -21,26 +21,27 @@
     <!-- /Extension Stylesheets -->
 
     <!-- Libraries -->
-    <script src="../libraries/jQuery/jquery-1.9.1.min.js"></script>
+    <script src="../libraries/components/jquery/jquery.min.js"></script>
     <script src="../libraries/jQuery/jquery.hoverIntent.minified.js"></script>
     <script src="../libraries/jQuery/jquery.form.min.js"></script>
     <script src="../libraries/jQuery/jquery.newsticker.pack.js"></script>
     <script src="../libraries/jQuery/js.cookie-2.1.0.min.js"></script>
-    <script src="../libraries/jQuery/jquery-ui.min.js"></script>
-	 <!-- conditional locale include - todo use same for timepicker -->
-	<?php 
-		if(preg_match('"^([a-z]{2})(-[A-Z]{2})?$"', $this->kga['lang']['countryCode'],$temp)){ 
-			if (is_file("../libraries/jQuery/i18n/datepicker-$temp[0].js")) 
-				echo "<script src=\"../libraries/jQuery/i18n/datepicker-$temp[0].js\"></script>\n";
-			elseif (is_file("../libraries/jQuery/i18n/datepicker-$temp[1].js")) 
-				echo "<script src=\"../libraries/jQuery/i18n/datepicker-$temp[1].js\"></script>\n";
-			else echo "\n	<!-- ".getcwd()."  $temp[1]  $temp[0] missing the jquery ui i18n libs for ".$this->kga['lang']['countryCode'].' -->';
-		}
-	?>
-	<!-- /conditional -->
+    <script src="../libraries/components/jqueryui/jquery-ui.min.js"></script>
+    <!-- conditional locale include - todo use same for timepicker -->
+    <?php 
+	// the libraries can be done with composer /libraries/components/jqueryui
+        if(preg_match('"^([a-z]{2})(-[A-Z]{2})?$"', $this->kga['lang']['countryCode'],$temp)){ 
+            if (is_file("../libraries/components/jqueryui/ui/i18n/datepicker-$temp[0].js")) 
+                echo "<script src=\"../libraries/components/ui/jqueryui/i18n/datepicker-$temp[0].js\"></script>\n";
+            elseif (is_file("../libraries/components/jqueryui/ui/i18n/datepicker-$temp[1].js")) 
+                echo "<script src=\"../libraries/components/jqueryui/ui/i18n/datepicker-$temp[1].js\"></script>\n";
+            else echo "\n    <!-- ".getcwd()."  $temp[1]  $temp[0] missing the jquery ui i18n libs for ".$this->kga['lang']['countryCode'].' -->';
+        }
+    ?>
+    <!-- /conditional -->
     <script src="../libraries/jQuery/jquery.ui.timepicker.min.js"></script>
     <!--<script src="../libraries/phpjs/strftime.min.js"></script>-->
-	<script src="../libraries/jQuery/jquery.selectboxes.min.js"></script>
+    <script src="../libraries/jQuery/jquery.selectboxes.min.js"></script>
     <!-- /Libs -->
     
     <!-- Libraries Extensions -->
@@ -54,7 +55,7 @@
     <script type="text/javascript" src="../js/main.js"></script>
     <script type="text/javascript" src="../js/init.js"></script>
     <!-- /Default JavaScript -->
-	
+    
     <!-- Extension JavaScripts -->
     <?php foreach ($this->js_extension_files as $object): ?>
         <script type="text/javascript" src="<?php echo $this->escape($object); ?>"></script>
@@ -62,8 +63,8 @@
     <!-- /Extension JavaScripts -->
 
     <script type="text/javascript">
-	    var skin = "<?php echo $this->escape($this->skin()->getName()); ?>";
-		var lang_checkUsername = "<?php echo $this->escape($this->kga['lang']['checkUsername']); ?>";
+        var skin = "<?php echo $this->escape($this->skin()->getName()); ?>";
+        var lang_checkUsername = "<?php echo $this->escape($this->kga['lang']['checkUsername']); ?>";
         var lang_checkGroupname = "<?php echo $this->escape($this->kga['lang']['checkGroupname']); ?>";
         var lang_checkStatusname = "<?php echo $this->escape($this->kga['lang']['checkStatusname']); ?>";
         var lang_passwordsDontMatch = "<?php echo $this->escape($this->kga['lang']['passwordsDontMatch']); ?>";
@@ -91,14 +92,14 @@
         var default_title = "<?php echo isset($this->kga['user']) ? $this->escape($this->kga['user']['name']) : $this->escape($this->kga['customer']['name'])?> - Kimai";
         var revision = <?php echo $this->kga['revision'] ?>;
         var timeframeDateFormat = "<?php echo $this->escape($this->kga->getDateFormat(2)) ?>";
-		var dateFormat = '<?php echo $this->escape($this->kga->getDateFormat(0)) ?>';
+        var dateFormat = '<?php echo $this->escape($this->kga->getDateFormat(0)) ?>';
         var selected_customer = '<?php echo $this->customerData['customerID']?>';
         var selected_project = '<?php echo $this->projectData['projectID']?>';
         var selected_activity = '<?php echo $this->activityData['activityID']?>';
         var pickerClicked = '';
         var weekdayNames = <?php echo $this->weekdays_short_array?>;
-	
-		$.datepicker.setDefaults({
+    
+        $.datepicker.setDefaults({
             showOtherMonths: true,
             selectOtherMonths: true,
             nextText: '',
@@ -217,10 +218,10 @@
                     dateFormat: window.dateFormat,
                     onSelect: function (dateText, instance) {
                         if (this == $('#pick_in')[0]) {
-                            setTimeframe(new Date(dateText), undefined);
+                            setTimeframe($.datepicker.parseDate(window.dateFormat,dateText), undefined);
                         }
                         if (this == $('#pick_out')[0]) {
-                            setTimeframe(undefined, new Date(dateText));
+                            setTimeframe(undefined, $.datepicker.parseDate(window.dateFormat,dateText));
                         }
                     }
                 });

@@ -52,16 +52,18 @@ $extensions->loadConfigurations();
 // ============================================
 $timeframe = get_timeframe();
 $in = $timeframe[0];
-$inddate =new DateTime("@$in");
-Kimai_Logger::logfile("in ".$in. ( $inddate->format(Datetime::ATOM)));
+// $inddate =new DateTime("@$in");
+// Kimai_Logger::logfile("in ".$in.' '. ( $inddate->format(Datetime::ATOM)));
 $out = $timeframe[1];
-Kimai_Logger::logfile("in ".$out);
+// $outdate =new DateTime("@$out");
+// Kimai_Logger::logfile("out ".$out.' '. ( $outdate->format(Datetime::ATOM)));
+
 if (isset($kga['lang']['countryCode'])) {
-	/*
-	Not sure that this has any effect. Kimai has been using the zend framework for dates and it's own translations
-	this didn't work: locale_set_default($kga['lang']['countryCode'].'.'.$kga['server_charset']);
-	*/
-	setlocale(LC_ALL, $kga['lang']['countryCode'].'.'.$kga['server_charset']);
+    /*
+    Not sure that this has any effect. Kimai has been using the zend framework for dates and it's own kimai specifc translations
+    this didn't work: locale_set_default($kga['lang']['countryCode'].'.'.$kga['server_charset']);
+     */
+    setlocale(LC_ALL, $kga['lang']['countryCode'] . '.' . $kga['server_charset']);
 
 }
 
@@ -70,12 +72,12 @@ if (isset($kga['lang']['countryCode'])) {
 // ===============================================
 $current_timer = array();
 if (isset($kga['customer'])) {
-  $current_timer['all']  = 0;
-  $current_timer['hour'] = 0;
-  $current_timer['min']  = 0;
-  $current_timer['sec']  = 0;
+    $current_timer['all'] = 0;
+    $current_timer['hour'] = 0;
+    $current_timer['min'] = 0;
+    $current_timer['sec'] = 0;
 } else {
-  $current_timer = $database->get_current_timer();
+    $current_timer = $database->get_current_timer();
 }
 
 // =======================================
@@ -87,7 +89,7 @@ $dp_start = 0;
 if ($kga['calender_start'] != "") {
     $dp_start = $kga['calender_start'];
 } elseif (isset($kga['user'])) {
-	// use the user's date format 
+    // use the user's date format
     $dp_start = date($kga->getDateFormat(3), $database->getjointime($kga['user']['userID']));
 }
 
@@ -106,7 +108,7 @@ if (isset($kga['customer'])) {
 // = DatePicker localization =
 // ===========================
 // is this used?
-$localized_DatePicker = ""; 
+$localized_DatePicker = "";
 
 $view->assign('weekdays_array', sprintf(
     "['%s','%s','%s','%s','%s','%s','%s']\n",
@@ -195,20 +197,21 @@ $view->assign('lang_checkStatusname', $kga['lang']['checkStatusname']);
 $view->assign('lang_checkGlobalRoleName', $kga['lang']['checkGlobalRoleName']);
 $view->assign('lang_checkMembershipRoleName', $kga['lang']['checkMembershipRoleName']);
 
-$customerData = array('customerID'=>false, 'name'=>'');
-$projectData  = array('projectID'=>false, 'name'=>'');
-$activityData = array('activityID'=>false, 'name'=>'');
+$customerData = array('customerID' => false, 'name' => '');
+$projectData = array('projectID' => false, 'name' => '');
+$activityData = array('activityID' => false, 'name' => '');
 
 if (!isset($kga['customer'])) {
-  //$lastTimeSheetRecord = $database->timeSheet_get_data(false);
-  $lastProject = $database->project_get_data($kga['user']['lastProject']);
-  $lastActivity = $database->activity_get_data($kga['user']['lastActivity']);
-  if (!$lastProject['trash']) {
-    $projectData = $lastProject;
-    $customerData = $database->customer_get_data($lastProject['customerID']);
-  }
-  if (!$lastActivity['trash'])
-    $activityData = $lastActivity;
+    //$lastTimeSheetRecord = $database->timeSheet_get_data(false);
+    $lastProject = $database->project_get_data($kga['user']['lastProject']);
+    $lastActivity = $database->activity_get_data($kga['user']['lastActivity']);
+    if (!$lastProject['trash']) {
+        $projectData = $lastProject;
+        $customerData = $database->customer_get_data($lastProject['customerID']);
+    }
+    if (!$lastActivity['trash']) {
+        $activityData = $lastActivity;
+    }
 }
 $view->assign('customerData', $customerData);
 $view->assign('projectData', $projectData);
@@ -218,7 +221,7 @@ $view->assign('activityData', $activityData);
 // = INCLUDE EXTENSION PHP FILE            =
 // =========================================
 foreach ($extensions->phpIncludeFiles() as $includeFile) {
-  require_once $includeFile;
+    require_once $includeFile;
 }
 
 // =======================
@@ -239,8 +242,8 @@ if (isset($kga['customer'])) {
         array(
             'customerID' => $kga['customer']['customerID'],
             'name' => $kga['customer']['name'],
-            'visible' => $kga['customer']['visible']
-        )
+            'visible' => $kga['customer']['visible'],
+        ),
     ));
 } else {
     $view->assign('customers', $database->get_customers($kga['user']['groups']));
